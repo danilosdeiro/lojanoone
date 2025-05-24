@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cards Personalizados MTG</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" xintegrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+            @apply transition-colors duration-300 ease-in-out;
+        }
+        .hero-bg {
+            background-image: url('https://wallpapers.com/images/hd/mtg-symbol-ksp6f68vdqxdxpwt.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+        .card-image-wrapper {
+            width: 100%;
+            padding-top: 140%; 
+            position: relative;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+        .card-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; 
+        }
+        .preview-image-container {
+            width: 200px;
+            height: 280px;
+            border: 2px dashed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .preview-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        .nav-link {
+            @apply px-3 py-2 rounded-md text-sm font-medium transition-colors;
+        }
+        .nav-link-mobile {
+            @apply block px-3 py-2 rounded-md text-base font-medium transition-colors;
+        }
+        .btn-primary {
+            @apply bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50;
+        }
+        .btn-secondary { 
+            @apply mt-8 bg-gray-600 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 dark:focus:ring-gray-400 focus:ring-opacity-50 flex items-center justify-center;
+        }
+        #feedbackMessage {
+            display: none;
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+        }
+        .feedback-success {
+            @apply bg-green-500 text-white;
+        }
+        .feedback-error {
+            @apply bg-red-500 text-white;
+        }
+        .contact-link {
+            @apply text-xl font-semibold transition-colors flex items-center;
+        }
+        .contact-icon {
+            @apply mr-2;
+        }
+        #themeToggleBtn {
+            @apply p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontWeight: {
+                        'extrabold': '800',
+                        'black': '900',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-white text-gray-800 dark:bg-gray-900 dark:text-gray-100">
+
+    <header class="bg-gray-100 dark:bg-gray-800 shadow-lg sticky top-0 z-50 transition-colors duration-300 ease-in-out">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <a href="#home" class="text-2xl sm:text-3xl font-extrabold tracking-tight">
+                        <span class="text-slate-800 dark:text-slate-100">NOONE STORE</span>
+                        <span class="text-indigo-600 dark:text-indigo-400"> - MTG</span>
+                    </a>
+                </div>
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="#home" class="nav-link text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white">Início</a>
+                    <a href="#gallery" class="nav-link text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white">Galeria</a>
+                    <a href="#order" class="nav-link text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white">Encomendar</a>
+                    <a href="#contact" class="nav-link text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white">Contato</a>
+                    <button id="themeToggleBtn" title="Alternar tema" class="text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 focus:ring-indigo-500 dark:focus:ring-indigo-400">
+                        <i id="themeIcon" class="fas fa-sun text-xl"></i>
+                    </button>
+                </div>
+                <div class="-mr-2 flex md:hidden">
+                     <button id="themeToggleBtnMobile" title="Alternar tema" class="mr-2 text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 focus:ring-indigo-500 dark:focus:ring-indigo-400 p-2 rounded-md">
+                        <i id="themeIconMobile" class="fas fa-sun text-xl"></i>
+                    </button>
+                    <button id="mobileMenuButton" type="button" class="bg-gray-200 dark:bg-gray-700 inline-flex items-center justify-center p-2 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white hover:bg-gray-300 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 dark:focus:ring-indigo-400" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Abrir menu principal</span>
+                        <svg id="menuIconOpen" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                        <svg id="menuIconClose" class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <div class="md:hidden hidden bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700" id="mobileMenu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#home" class="nav-link-mobile text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white">Início</a>
+                <a href="#gallery" class="nav-link-mobile text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white">Galeria</a>
+                <a href="#order" class="nav-link-mobile text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white">Encomendar</a>
+                <a href="#contact" class="nav-link-mobile text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white">Contato</a>
+            </div>
+        </div>
+    </header>
+
+    <div id="feedbackMessage"></div>
+
+    <section id="home" class="hero-bg text-white py-20 md:py-32">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center bg-black bg-opacity-70 dark:bg-opacity-60 p-8 md:p-12 rounded-xl">
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight">
+                Seus Cards de Magic <span class="text-indigo-400 dark:text-indigo-300">Totalmente Personalizados</span>
+            </h1>
+            <p class="text-lg sm:text-xl md:text-2xl mb-10 max-w-3xl mx-auto text-gray-100 dark:text-gray-200">
+                Transforme suas ideias em cards únicos! Envie o nome, a arte e nós criamos a sua carta personalizada com qualidade profissional.
+            </p>
+            <a href="#order" class="btn-primary text-lg">Faça sua Encomenda Agora!</a>
+        </div>
+    </section>
+
+    <section id="gallery" class="pt-16 pb-8 bg-gray-50 dark:bg-gray-800 transition-colors duration-300 ease-in-out">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12 text-indigo-600 dark:text-indigo-400">Alguns Cards de nossa galeria</h2>
+            <div id="galleryGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6 mb-12">
+                </div>
+            <div class="text-center">
+                <button id="loadMoreBtn" class="btn-secondary" style="display: none;">
+                    Ver Mais <i class="fas fa-arrow-down ml-2"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section id="order" class="pt-8 pb-16 bg-white dark:bg-gray-900 transition-colors duration-300 ease-in-out">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12 text-indigo-600 dark:text-indigo-400">Faça sua Encomenda</h2>
+            <form id="orderForm" class="max-w-2xl mx-auto bg-gray-50 dark:bg-gray-800 p-8 rounded-lg shadow-2xl transition-colors duration-300 ease-in-out">
+                <div class="mb-6">
+                    <label for="cardName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nome do Card:</label>
+                    <input type="text" id="cardName" name="cardName" required
+                           class="w-full px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
+                           placeholder="Ex: Dragão Vermelho Poderoso">
+                </div>
+                <div class="mb-6">
+                    <label for="cardImageFile" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Imagem para o Card:</label>
+                    <input type="file" id="cardImageFile" name="cardImageFile" accept="image/*" required
+                           class="w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4
+                                  file:rounded-md file:border-0 file:text-sm file:font-semibold
+                                  file:bg-indigo-500 file:text-indigo-50 hover:file:bg-indigo-600
+                                  cursor-pointer">
+                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">PNG, JPG, GIF até 10MB.</p>
+                </div>
+                <div class="mb-6 flex justify-center">
+                    <div id="imagePreviewContainer" class="preview-image-container rounded-md bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600">
+                        <img id="imagePreview" src="#" alt="Pré-visualização da Imagem" class="preview-image hidden"/>
+                        <span id="previewText" class="text-gray-500 dark:text-gray-400 text-sm">Pré-visualização da Imagem</span>
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Seu Email para Contato:</label>
+                    <input type="email" id="email" name="email" required
+                           class="w-full px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
+                           placeholder="seuemail@exemplo.com">
+                </div>
+                <div class="mb-8">
+                    <label for="notes" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Observações Adicionais:</label>
+                    <textarea id="notes" name="notes" rows="4"
+                              class="w-full px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
+                              placeholder="Alguma instrução especial para a montagem do card? (opcional)"></textarea>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn-primary w-full sm:w-auto">
+                        Enviar Pedido
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <section id="contact" class="py-16 bg-gray-50 dark:bg-gray-800 transition-colors duration-300 ease-in-out">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl sm:text-4xl font-bold mb-8 text-indigo-600 dark:text-indigo-400">Entre em Contato</h2>
+            <p class="text-lg mb-6 max-w-xl mx-auto text-gray-700 dark:text-gray-300">
+                Tem alguma dúvida ou sugestão? Adoraríamos ouvir de você!
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-8">
+                <a href="mailto:lojanoone@gmail.com" class="contact-link text-indigo-700 hover:text-indigo-800 dark:text-indigo-300 dark:hover:text-indigo-200">
+                    <i class="fas fa-envelope contact-icon"></i>
+                    lojanoone@gmail.com
+                </a>
+                <a href="https://wa.me/5571993306268" target="_blank" rel="noopener noreferrer" class="contact-link text-indigo-700 hover:text-indigo-800 dark:text-indigo-300 dark:hover:text-indigo-200">
+                    <i class="fab fa-whatsapp contact-icon"></i>
+                    (71) 99330-6268
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-100 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 transition-colors duration-300 ease-in-out">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center text-gray-600 dark:text-gray-400">
+            <p>&copy; <span id="currentYear"></span> Noone Store. Todos os direitos reservados.</p>
+            <p class="text-sm">Criando cards únicos para jogadores apaixonados.</p>
+        </div>
+    </footer>
+
+    <script>
+        const galleryImageUrls = [
+            // INSIRA SEUS LINKS DIRETOS DE IMAGEM AQUI!
+            // Exemplo: 'https://i.imgur.com/SEULINK1.jpg',
+            'https://i.ibb.co/4w9Zrs7C/Kinnan-Bonder-Prodigy.png',
+            'https://i.ibb.co/qYwrLPRw/tmp-67fc24fa1aea4.png',
+            'https://i.ibb.co/0jH06rKZ/Aang-Omnath.jpg',
+            'https://i.ibb.co/pBrm8ZGq/Baby-Lasagna.png',
+            'https://i.imgur.com/EXAMPLE1.jpg', 
+            'https://i.imgur.com/EXAMPLE2.png', 
+            'https://i.ibb.co/7Q0CjS8/placeholder-card1.png',
+            'https://i.ibb.co/yWYwZ0G/placeholder-card2.png',
+            'https://i.ibb.co/PFLN0NA/placeholder-card3.png',
+            'https://i.ibb.co/XV3Yx4x/placeholder-card4.png',
+            'https://i.ibb.co/JkYxZz0/placeholder-card5.png',
+            'https://i.ibb.co/HCv8gP8/placeholder-card6.png',
+            'https://i.ibb.co/YhBny0S/placeholder-card7.png',
+            'https://i.ibb.co/g7N2Yx9/placeholder-card8.png',
+            'https://i.ibb.co/M2vN9q0/placeholder-card9.png',
+        ];
+
+        const galleryGrid = document.getElementById('galleryGrid');
+        const loadMoreBtn = document.getElementById('loadMoreBtn');
+        const itemsPerPage = 10;
+        let currentPage = 0;
+
+        function renderGalleryPage(page, clearExisting = false) {
+            if (!galleryGrid) return;
+            if (clearExisting) {
+                galleryGrid.innerHTML = '';
+            }
+
+            const startIndex = page * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const itemsToRender = galleryImageUrls.slice(startIndex, endIndex);
+
+            itemsToRender.forEach(imageUrl => {
+                const cardDiv = document.createElement('div');
+                cardDiv.className = 'bg-white dark:bg-gray-700 p-1 md:p-2 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-in-out';
+
+                const imageWrapper = document.createElement('div');
+                imageWrapper.className = 'card-image-wrapper';
+
+                const img = document.createElement('img');
+                img.src = imageUrl;
+                img.alt = 'Card Personalizado MTG';
+                img.className = 'card-image';
+                img.loading = 'lazy'; 
+                img.onerror = function() {
+                    this.onerror = null;
+                    this.src = 'https://placehold.co/300x420/7f1d1d/ffffff?text=Erro+Imagem';
+                    this.alt = 'Erro ao carregar imagem do card';
+                };
+
+                imageWrapper.appendChild(img);
+                cardDiv.appendChild(imageWrapper);
+                galleryGrid.appendChild(cardDiv);
+            });
+
+            if (loadMoreBtn) {
+                if ((page + 1) * itemsPerPage >= galleryImageUrls.length) {
+                    loadMoreBtn.style.display = 'none'; 
+                } else {
+                    loadMoreBtn.style.display = 'inline-flex';
+                }
+            }
+        }
+
+        function handleLoadMore() {
+            currentPage++;
+            renderGalleryPage(currentPage, false);
+        }
+
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        const themeToggleBtnMobile = document.getElementById('themeToggleBtnMobile');
+        const themeIcon = document.getElementById('themeIcon');
+        const themeIconMobile = document.getElementById('themeIconMobile');
+        const htmlElement = document.documentElement;
+        const mobileMenuButton = document.getElementById('mobileMenuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const menuIconOpen = document.getElementById('menuIconOpen');
+        const menuIconClose = document.getElementById('menuIconClose');
+
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                htmlElement.classList.add('dark');
+                if(themeIcon) { themeIcon.classList.remove('fa-sun'); themeIcon.classList.add('fa-moon'); }
+                if(themeIconMobile) { themeIconMobile.classList.remove('fa-sun'); themeIconMobile.classList.add('fa-moon'); }
+            } else {
+                htmlElement.classList.remove('dark');
+                if(themeIcon) { themeIcon.classList.remove('fa-moon'); themeIcon.classList.add('fa-sun'); }
+                if(themeIconMobile) { themeIconMobile.classList.remove('fa-moon'); themeIconMobile.classList.add('fa-sun'); }
+            }
+        }
+
+        function toggleTheme() {
+            const currentTheme = htmlElement.classList.contains('dark') ? 'dark' : 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', newTheme);
+            applyTheme(newTheme);
+        }
+
+        if(themeToggleBtn) themeToggleBtn.addEventListener('click', toggleTheme);
+        if(themeToggleBtnMobile) themeToggleBtnMobile.addEventListener('click', toggleTheme);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (galleryImageUrls.length > 0) {
+                renderGalleryPage(currentPage, true); 
+            } else if (galleryGrid) {
+                 galleryGrid.innerHTML = '<p class="col-span-full text-center text-gray-500 dark:text-gray-400">Nenhuma imagem na galeria ainda. Adicione links de imagens no script.</p>';
+                 if(loadMoreBtn) loadMoreBtn.style.display = 'none';
+            }
+            if(loadMoreBtn) loadMoreBtn.addEventListener('click', handleLoadMore);
+
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (savedTheme) { applyTheme(savedTheme); }
+            else if (prefersDark) { applyTheme('dark'); }
+            else { applyTheme('light'); }
+        });
+
+        if(mobileMenuButton) {
+            mobileMenuButton.addEventListener('click', () => {
+                const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true' || false;
+                mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+                mobileMenu.classList.toggle('hidden');
+                menuIconOpen.classList.toggle('hidden');
+                menuIconClose.classList.toggle('hidden');
+            });
+        }
+
+        document.querySelectorAll('#mobileMenu a, #mobileMenu button').forEach(element => {
+            element.addEventListener('click', () => {
+                if (mobileMenu && mobileMenu.classList.contains('hidden')) return;
+                if(mobileMenuButton) mobileMenuButton.setAttribute('aria-expanded', 'false');
+                if(mobileMenu) mobileMenu.classList.add('hidden');
+                if(menuIconOpen) menuIconOpen.classList.remove('hidden');
+                if(menuIconClose) menuIconClose.classList.add('hidden');
+            });
+        });
+        
+        const cardImageInput = document.getElementById('cardImageFile');
+        const imagePreview = document.getElementById('imagePreview');
+        const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+        const previewText = document.getElementById('previewText');
+
+        if(cardImageInput) {
+            cardImageInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        if(imagePreview) { imagePreview.src = e.target.result; imagePreview.classList.remove('hidden'); }
+                        if(previewText) previewText.classList.add('hidden');
+                        if(imagePreviewContainer) {
+                            imagePreviewContainer.classList.remove('bg-gray-100', 'dark:bg-gray-700');
+                            imagePreviewContainer.style.borderStyle = 'solid';
+                        }
+                    }
+                    reader.readAsDataURL(file);
+                } else {
+                    if(imagePreview) { imagePreview.src = '#'; imagePreview.classList.add('hidden'); }
+                    if(previewText) previewText.classList.remove('hidden');
+                    if(imagePreviewContainer) {
+                        imagePreviewContainer.classList.add('bg-gray-100', 'dark:bg-gray-700');
+                        imagePreviewContainer.style.borderStyle = 'dashed';
+                    }
+                }
+            });
+        }
+
+        const orderForm = document.getElementById('orderForm');
+        const feedbackMessage = document.getElementById('feedbackMessage');
+
+        if(orderForm) {
+            orderForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const cardNameInput = document.getElementById('cardName').value;
+                const cardImageFileInput = document.getElementById('cardImageFile').files[0]; 
+                const emailInput = document.getElementById('email').value;
+
+                if (!cardNameInput || !cardImageFileInput || !emailInput) {
+                    showFeedback('Por favor, preencha todos os campos obrigatórios.', 'error');
+                    return;
+                }
+                console.log('Pedido Enviado:', { cardName: cardNameInput, imageName: cardImageFileInput ? cardImageFileInput.name : 'N/A', email: emailInput, notes: document.getElementById('notes').value });
+                showFeedback('Seu pedido foi enviado com sucesso! Entraremos em contato em breve.', 'success');
+                orderForm.reset();
+                if(imagePreview) { imagePreview.src = '#'; imagePreview.classList.add('hidden'); }
+                if(previewText) previewText.classList.remove('hidden');
+                if(imagePreviewContainer) {
+                    imagePreviewContainer.classList.add('bg-gray-100', 'dark:bg-gray-700');
+                    imagePreviewContainer.style.borderStyle = 'dashed';
+                }
+            });
+        }
+
+        function showFeedback(message, type) {
+            if(feedbackMessage) {
+                feedbackMessage.textContent = message;
+                feedbackMessage.className = '';
+                feedbackMessage.classList.add('py-3', 'px-4', 'rounded-md', 'shadow-md', 'fixed', 'top-20', 'left-1/2', '-translate-x-1/2', 'z-[1000]');
+                feedbackMessage.classList.add(type === 'success' ? 'feedback-success' : 'feedback-error');
+                feedbackMessage.style.display = 'block';
+                setTimeout(() => { feedbackMessage.style.display = 'none'; }, 5000);
+            }
+        }
+
+        const currentYearEl = document.getElementById('currentYear');
+        if(currentYearEl) currentYearEl.textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
